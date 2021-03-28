@@ -75,6 +75,7 @@ export default class BurgerBuilder extends Component {
             addHandler={this.addIngredientHandler}
             removeHandler={this.removeIngredientHandler}
             disabled={disabledInfo}
+            totalPrice={this.state.totalPrice}
           />
         </div>
       </>
