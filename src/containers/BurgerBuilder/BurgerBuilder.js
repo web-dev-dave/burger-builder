@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { BuildControls } from "../../components/Burger/BuildControls/BuildControls";
 import { Burger } from "../../components/Burger/Burger";
+import { OrderSummary } from "../../components/Burger/OrderSummary/OrderSummary";
+import { Modal } from "../../components/UI/Modal/Modal";
 
 const INGREDIENT_PRICES = {
   salad: 0.5,
@@ -18,6 +20,21 @@ export default class BurgerBuilder extends Component {
       meat: 0,
     },
     totalPrice: 4,
+    purchasable: false,
+  };
+
+  updatePurchaseState = (ingredients) => {
+    const sum = Object.keys(ingredients)
+      .map((igKey) => {
+        return ingredients[igKey];
+      })
+      .reduce((acc, curr) => {
+        return acc + curr;
+      }, 0);
+
+    this.setState({
+      purchasable: sum > 0,
+    });
   };
 
   addIngredientHandler = (type) => {
@@ -34,12 +51,13 @@ export default class BurgerBuilder extends Component {
       ingredients: updatedIngredients,
       totalPrice: newPrice,
     });
+    this.updatePurchaseState(updatedIngredients);
   };
 
   removeIngredientHandler = (type) => {
     const oldCount = this.state.ingredients[type];
-    if(oldCount <= 0) {
-        return
+    if (oldCount <= 0) {
+      return;
     }
     const updatedCount = oldCount - 1;
     const updatedIngredients = {
@@ -53,31 +71,31 @@ export default class BurgerBuilder extends Component {
       ingredients: updatedIngredients,
       totalPrice: newPrice,
     });
+    this.updatePurchaseState(updatedIngredients);
   };
 
   render() {
     const disabledInfo = {
-      ...this.state.ingredients
+      ...this.state.ingredients,
+    };
+
+    for (let key in disabledInfo) {
+      disabledInfo[key] = disabledInfo[key] <= 0;
     }
 
-    for(let key in disabledInfo) {
-      disabledInfo[key] = disabledInfo[key] <= 0
-    }
-
-    console.log(disabledInfo)
     return (
       <>
-        <div>
-          <Burger ingredients={this.state.ingredients} />
-        </div>
-        <div>
-          <BuildControls
-            addHandler={this.addIngredientHandler}
-            removeHandler={this.removeIngredientHandler}
-            disabled={disabledInfo}
-            totalPrice={this.state.totalPrice}
-          />
-        </div>
+        <Modal>
+          <OrderSummary ingredients={this.state.ingredients} />
+        </Modal>
+        <Burger ingredients={this.state.ingredients} />
+        <BuildControls
+          addHandler={this.addIngredientHandler}
+          removeHandler={this.removeIngredientHandler}
+          disabled={disabledInfo}
+          totalPrice={this.state.totalPrice}
+          purchase={this.state.purchasable}
+        />
       </>
     );
   }

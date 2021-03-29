@@ -11,7 +11,6 @@ const controls = [
 ];
 
 export const BuildControls = (props) => {
-  console.log(props)
   return (
     <div className={classes.BuildControls}>
       <p>Current Price: <strong>${props.totalPrice.toFixed(2)}</strong></p>
@@ -27,6 +26,7 @@ export const BuildControls = (props) => {
           />
         );
       })}
+      <button className={classes.OrderButton} disabled={!props.purchase}>ORDER NOW</button>
     </div>
   );
 };
