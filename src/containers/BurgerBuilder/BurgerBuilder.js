@@ -1,15 +1,15 @@
-import React, { Component } from "react";
-import { BuildControls } from "../../components/Burger/BuildControls/BuildControls";
-import { Burger } from "../../components/Burger/Burger";
-import { OrderSummary } from "../../components/Burger/OrderSummary/OrderSummary";
-import { Modal } from "../../components/UI/Modal/Modal";
+import React, { Component } from 'react'
+import { BuildControls } from '../../components/Burger/BuildControls/BuildControls'
+import { Burger } from '../../components/Burger/Burger'
+import { OrderSummary } from '../../components/Burger/OrderSummary/OrderSummary'
+import { Modal } from '../../components/UI/Modal/Modal'
 
 const INGREDIENT_PRICES = {
   salad: 0.5,
   cheese: 0.4,
   meat: 1.3,
   bacon: 0.7,
-};
+}
 
 export default class BurgerBuilder extends Component {
   state = {
@@ -21,71 +21,76 @@ export default class BurgerBuilder extends Component {
     },
     totalPrice: 4,
     purchasable: false,
-  };
+    purchasing: false,
+  }
 
   updatePurchaseState = (ingredients) => {
     const sum = Object.keys(ingredients)
       .map((igKey) => {
-        return ingredients[igKey];
+        return ingredients[igKey]
       })
       .reduce((acc, curr) => {
-        return acc + curr;
-      }, 0);
+        return acc + curr
+      }, 0)
 
     this.setState({
       purchasable: sum > 0,
-    });
-  };
+    })
+  }
 
   addIngredientHandler = (type) => {
-    const oldCount = this.state.ingredients[type];
-    const updatedCount = oldCount + 1;
+    const oldCount = this.state.ingredients[type]
+    const updatedCount = oldCount + 1
     const updatedIngredients = {
       ...this.state.ingredients,
-    };
-    updatedIngredients[type] = updatedCount;
-    const priceAddition = INGREDIENT_PRICES[type];
-    const oldPrice = this.state.totalPrice;
-    const newPrice = oldPrice + priceAddition;
+    }
+    updatedIngredients[type] = updatedCount
+    const priceAddition = INGREDIENT_PRICES[type]
+    const oldPrice = this.state.totalPrice
+    const newPrice = oldPrice + priceAddition
     this.setState({
       ingredients: updatedIngredients,
       totalPrice: newPrice,
-    });
-    this.updatePurchaseState(updatedIngredients);
-  };
+    })
+    this.updatePurchaseState(updatedIngredients)
+  }
 
   removeIngredientHandler = (type) => {
-    const oldCount = this.state.ingredients[type];
+    const oldCount = this.state.ingredients[type]
     if (oldCount <= 0) {
-      return;
+      return
     }
-    const updatedCount = oldCount - 1;
+    const updatedCount = oldCount - 1
     const updatedIngredients = {
       ...this.state.ingredients,
-    };
-    updatedIngredients[type] = updatedCount;
-    const priceSubtraction = INGREDIENT_PRICES[type];
-    const oldPrice = this.state.totalPrice;
-    const newPrice = oldPrice - priceSubtraction;
+    }
+    updatedIngredients[type] = updatedCount
+    const priceSubtraction = INGREDIENT_PRICES[type]
+    const oldPrice = this.state.totalPrice
+    const newPrice = oldPrice - priceSubtraction
     this.setState({
       ingredients: updatedIngredients,
       totalPrice: newPrice,
-    });
-    this.updatePurchaseState(updatedIngredients);
-  };
+    })
+    this.updatePurchaseState(updatedIngredients)
+  }
+
+  purchaseHandler = () => {
+    this.setState({ purchasing: true })
+  }
 
   render() {
     const disabledInfo = {
       ...this.state.ingredients,
-    };
+    }
 
     for (let key in disabledInfo) {
-      disabledInfo[key] = disabledInfo[key] <= 0;
+      disabledInfo[key] = disabledInfo[key] <= 0
     }
 
     return (
       <>
-        <Modal>
+        <Modal show={this.state.purchasing}>
           <OrderSummary ingredients={this.state.ingredients} />
         </Modal>
         <Burger ingredients={this.state.ingredients} />
@@ -95,8 +100,9 @@ export default class BurgerBuilder extends Component {
           disabled={disabledInfo}
           totalPrice={this.state.totalPrice}
           purchase={this.state.purchasable}
+          purchasing={this.purchaseHandler}
         />
       </>
-    );
+    )
   }
 }
