@@ -1,5 +1,7 @@
 import React from 'react'
 
+import Button from '../../UI/Button/Button'
+
 export const OrderSummary = (props) => {
   const ingredientSummary = Object.keys(props.ingredients).map((igKey) => {
     return (
@@ -15,9 +17,18 @@ export const OrderSummary = (props) => {
       <h3>Your Order</h3>
       <p>A delicious burger with the following ingredients:</p>
       <ul>{ingredientSummary}</ul>
+      <p>
+        <strong>Total Cost: ${props.totalCost.toFixed(2)}</strong>
+      </p>
       <p>Continue to Checkout?</p>
-      <button onClick={props.modalClose}>CANCEL</button>
-      <button onClick={props.modalClose}>CONTINUE</button>
+      <Button clicked={props.modalCancel} btnType='Danger'>
+        CANCEL
+      </Button>
+      <Button clicked={props.modalContinue} btnType='Success'>
+        CONTINUE
+      </Button>
     </>
   )
 }
+
+// props.modalClose
