@@ -4,9 +4,11 @@ import classes from './Toggle.module.css'
 
 const Toggle = (props) => {
   return (
-    <button className={classes.Toggle} onClick={props.clicked}>
-      {props.children}
-    </button>
+    <div className={classes.Toggle} onClick={props.clicked}>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
   )
 }
 
